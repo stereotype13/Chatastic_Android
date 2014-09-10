@@ -5,21 +5,19 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.squareup.otto.Subscribe;
 
+import io.chatastic.chatastic.Events.BusProvider;
+import io.chatastic.chatastic.Events.ConversationListItemClicked;
 import io.chatastic.chatastic.Models.Conversation;
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.ModelList;
@@ -55,6 +53,18 @@ public class MainActivity extends Activity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -66,13 +76,13 @@ public class MainActivity extends Activity
 
 
                 CursorList cursorList = Query.all(Conversation.class).get();
-                ArrayList<Conversation> conversations = (ArrayList)ModelList.from(cursorList);
+                ModelList<Conversation> conversations = ModelList.from(cursorList);
 
 
-                MessagesFragment messagesFragment = new MessagesFragment();
-                messagesFragment.setConversations(conversations);
+                ConversationsFragment conversationsFragment = new ConversationsFragment();
+                conversationsFragment.setConversations(conversations);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, messagesFragment)
+                        .replace(R.id.container, conversationsFragment)
                         .commit();
 
                 break;
@@ -84,6 +94,13 @@ public class MainActivity extends Activity
         }
 
 
+    }
+
+    @Subscribe
+    public void onConversationListItemClicked(ConversationListItemClicked event) {
+        Toast.makeText(this, "Position " + String.valueOf(event.position) + " was clicked!", Toast.LENGTH_LONG).show();
+
+        //Launch a conversation fragment based on the clicked position
     }
 
     public void onSectionAttached(int number) {
@@ -161,7 +178,7 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_conversations, container, false);
             return rootView;
         }
 
@@ -172,5 +189,6 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
 
 }

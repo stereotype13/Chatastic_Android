@@ -68,8 +68,28 @@ public class ChatasticApp extends Application {
 
         //For testing purposes
         //Add some seed data
+
+
+        CursorList conversationsCursorList = Query.all(Conversation.class).get();
+        ModelList<Conversation> conversations = ModelList.from(conversationsCursorList);
+
+        CursorList messagesCursorList = Query.all(Message.class).get();
+        ModelList<Message> messages = ModelList.from(messagesCursorList);
+
+        for(Conversation c : conversations) {
+            c.delete();
+        }
+
+        for(Message m : messages) {
+            m.delete();
+        }
+
         Conversation conversation = new Conversation();
         conversation.title = "This is the first conversation";
+        conversation.save();
+
+        conversation = new Conversation();
+        conversation.title = "This is the second conversation";
         conversation.save();
 
         User user = new User();
@@ -82,9 +102,6 @@ public class ChatasticApp extends Application {
         message.body = "This is just some message!";
         message.conversation_id = conversation.getId();
         message.conversation = conversation;
-
-        CursorList cursorList = Query.all(conversation.getClass()).get();
-        ModelList<Conversation> conversations = ModelList.from(cursorList);
 
 
     }
