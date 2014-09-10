@@ -18,6 +18,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import io.chatastic.chatastic.Models.Conversation;
+import se.emilsjolander.sprinkles.CursorList;
+import se.emilsjolander.sprinkles.ModelList;
+import se.emilsjolander.sprinkles.Query;
+
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -54,10 +61,20 @@ public class MainActivity extends Activity
 
         switch (position) {
             case 0:
+
+                Conversation conversation = new Conversation();
+
+
+                CursorList cursorList = Query.all(Conversation.class).get();
+                ArrayList<Conversation> conversations = (ArrayList)ModelList.from(cursorList);
+
+
                 MessagesFragment messagesFragment = new MessagesFragment();
+                messagesFragment.setConversations(conversations);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, messagesFragment)
                         .commit();
+
                 break;
 
             default:
