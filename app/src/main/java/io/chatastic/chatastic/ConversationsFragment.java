@@ -34,14 +34,16 @@ public class ConversationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if(savedInstanceState != null) {
-           //mConversations = (ModelList<Conversation>)savedInstanceState.getSerializable(CONVERSATION_BUNDLE_KEY);
+           mConversations = (ModelList<Conversation>)savedInstanceState.getSerializable(CONVERSATION_BUNDLE_KEY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_conversations, container, false);
         ListView conversationsListView = (ListView)rootView.findViewById(R.id.lvConversations);
 
-        ConversationsAdapter conversationsAdapter = new ConversationsAdapter(mConversations);
-        conversationsListView.setAdapter(conversationsAdapter);
+        if(mConversations != null) {
+            ConversationsAdapter conversationsAdapter = new ConversationsAdapter(mConversations);
+            conversationsListView.setAdapter(conversationsAdapter);
+        }
 
         conversationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,8 +65,8 @@ public class ConversationsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-       //outState.putSerializable(CONVERSATION_BUNDLE_KEY, mConversations);
-      // super.onSaveInstanceState(outState);
+       outState.putSerializable(CONVERSATION_BUNDLE_KEY, mConversations);
+       super.onSaveInstanceState(outState);
     }
 
     public class ConversationsAdapter extends BaseAdapter {

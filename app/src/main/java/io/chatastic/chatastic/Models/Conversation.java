@@ -6,7 +6,10 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Model;
+import se.emilsjolander.sprinkles.ModelList;
+import se.emilsjolander.sprinkles.Query;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
@@ -22,6 +25,9 @@ public class Conversation extends Model implements Parcelable {
     final static String ID_KEY = "ID_KEY";
     final static String TITLE_KEY = "TITLE_KEY";
 
+    public ArrayList<Message> messages;
+    public ArrayList<Participant> participants;
+
     @Key
     @AutoIncrement
     @Column("id")
@@ -34,11 +40,23 @@ public class Conversation extends Model implements Parcelable {
         return id;
     }
 
-    public ArrayList<Message> messages;
-    public ArrayList<Participant> participants;
+    public void setId(long conversationID) {
+        this.id = conversationID;
+    }
+
 
     public Conversation() {
 
+    }
+
+    public Conversation(long conversationID) {
+
+        Conversation conversation = Query.one(Conversation.class, "SELECT * FROM Conversations WHERE id = ?", String.valueOf(conversationID)).get();
+        this.id = conversation.getId();
+        this.title = conversation.title;
+
+        CursorList messagesCursorList = Query.many(Message.class, "SELECT * FROM Messages WHERE conversation_id = ?", String.valueOf(this.getId())).get();
+        messages = (ArrayList)ModelList.from(messagesCursorList);
     }
 
     //Methods used to implement Parceleable Interface

@@ -83,6 +83,7 @@ public class MainActivity extends Activity
                 conversationsFragment.setConversations(conversations);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, conversationsFragment)
+                        .addToBackStack(null)
                         .commit();
 
                 break;
@@ -90,6 +91,7 @@ public class MainActivity extends Activity
             default:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .addToBackStack(null)
                         .commit();
         }
 
@@ -98,9 +100,17 @@ public class MainActivity extends Activity
 
     @Subscribe
     public void onConversationListItemClicked(ConversationListItemClicked event) {
-        Toast.makeText(this, "Position " + String.valueOf(event.position) + " was clicked!", Toast.LENGTH_LONG).show();
 
-        //Launch a conversation fragment based on the clicked position
+        //Launch a conversation fragment based the conversation clicked
+        Conversation conversation = new Conversation(event.conversationID);
+        MessagesFragment messagesFragment = new MessagesFragment();
+        messagesFragment.setConversation(conversation);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, messagesFragment)
+                .addToBackStack(null)
+                .commit();
+
     }
 
     public void onSectionAttached(int number) {

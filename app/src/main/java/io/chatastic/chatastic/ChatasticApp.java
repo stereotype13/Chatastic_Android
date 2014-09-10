@@ -84,24 +84,27 @@ public class ChatasticApp extends Application {
             m.delete();
         }
 
-        Conversation conversation = new Conversation();
-        conversation.title = "This is the first conversation";
-        conversation.save();
+        Conversation firstConversation = new Conversation();
+        firstConversation.title = "This is the first conversation";
+        firstConversation.save();
 
-        conversation = new Conversation();
-        conversation.title = "This is the second conversation";
-        conversation.save();
+        Conversation secondConversation = new Conversation();
+        secondConversation.title = "This is the second conversation";
+        secondConversation.save();
 
         User user = new User();
         Participant participant = new Participant();
         participant.user = user;
         participant.user_id = user.getId();
 
+        participant.save();
+
         Message message = new Message();
         message.participant_id = participant.getId();
         message.body = "This is just some message!";
-        message.conversation_id = conversation.getId();
-        message.conversation = conversation;
+        message.conversation_id = firstConversation.getId();
+        message.conversation = firstConversation;
+        message.save();
 
 
     }
