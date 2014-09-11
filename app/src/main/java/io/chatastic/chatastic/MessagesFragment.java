@@ -21,6 +21,8 @@ import se.emilsjolander.sprinkles.ModelList;
  */
 public class MessagesFragment extends Fragment {
 
+    private static final String CONVERSATION_BUNDLE_KEY = "CONVERSATION_BUNDLE_KEY";
+
     private Conversation mConversation;
 
     public MessagesFragment() {
@@ -28,6 +30,7 @@ public class MessagesFragment extends Fragment {
     }
 
     public void setConversation(Conversation conversation) {
+
         this.mConversation = conversation;
     }
 
@@ -37,12 +40,22 @@ public class MessagesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
         ListView lvMessages = (ListView)rootView.findViewById(R.id.lvMessages);
 
+        if(savedInstanceState != null) {
+            mConversation = (Conversation)savedInstanceState.getParcelable(CONVERSATION_BUNDLE_KEY);
+        }
+
         if(mConversation.messages != null) {
             MessagesAdapter messagesAdapter = new MessagesAdapter(mConversation.messages);
             lvMessages.setAdapter(messagesAdapter);
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(CONVERSATION_BUNDLE_KEY, mConversation);
+        super.onSaveInstanceState(outState);
     }
 
     //Inner classes

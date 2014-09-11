@@ -31,6 +31,12 @@ public class MainActivity extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private ConversationsFragment mConversationsFragment;
+    private MessagesFragment mMessagesFragment;
+
+    private static final String CONVERSATIONS_FRAGMENT = "CONVERSATIONS_FRAGMENT";
+    private static final String MESSAGES_FRAGMENT = "MESSAGES_FRAGMENT";
+    private static final String PLACEHOLDER_FRAGMENT = "PLACEHOLDER_FRAGMENT";
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -50,6 +56,8 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
     }
 
     @Override
@@ -65,12 +73,25 @@ public class MainActivity extends Activity
     }
 
     @Override
+    public void onBackPressed() {
+        mMessagesFragment = (MessagesFragment)getFragmentManager().findFragmentByTag(MESSAGES_FRAGMENT);
+        if(mMessagesFragment != null) {
+            //getFragmentManager().popBackStack(MESSAGES_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            mMessagesFragment = null;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
 
         switch (position) {
             case 0:
+
+                mConversationsFragment = (ConversationsFragment)getFragmentManager().findFragmentByTag(CONVERSATIONS_FRAGMENT);
+                mMessagesFragment = (MessagesFragment)getFragmentManager().findFragmentByTag(MESSAGES_FRAGMENT);
 
                 Conversation conversation = new Conversation();
 
@@ -79,19 +100,30 @@ public class MainActivity extends Activity
                 ModelList<Conversation> conversations = ModelList.from(cursorList);
 
 
-                ConversationsFragment conversationsFragment = new ConversationsFragment();
-                conversationsFragment.setConversations(conversations);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, conversationsFragment)
-                        .addToBackStack(null)
-                        .commit();
+                if(mConversationsFragment == null) {
+                    mConversationsFragment = new ConversationsFragment();
+                    mConversationsFragment.setConversations(conversations);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, mConversationsFragment, CONVERSATIONS_FRAGMENT)
+                            .addToBackStack(CONVERSATIONS_FRAGMENT)
+                            .commit();
+                }
+
+
+                if(mMessagesFragment != null) {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, mMessagesFragment, MESSAGES_FRAGMENT)
+                            .addToBackStack(MESSAGES_FRAGMENT)
+                            .commit();
+                }
+
 
                 break;
 
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                        .addToBackStack(null)
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), PLACEHOLDER_FRAGMENT)
+                        .addToBackStack(PLACEHOLDER_FRAGMENT)
                         .commit();
         }
 
@@ -103,12 +135,12 @@ public class MainActivity extends Activity
 
         //Launch a conversation fragment based the conversation clicked
         Conversation conversation = new Conversation(event.conversationID);
-        MessagesFragment messagesFragment = new MessagesFragment();
-        messagesFragment.setConversation(conversation);
+        mMessagesFragment = new MessagesFragment();
+        mMessagesFragment.setConversation(conversation);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, messagesFragment)
-                .addToBackStack(null)
+                .replace(R.id.container, mMessagesFragment, MESSAGES_FRAGMENT)
+                .addToBackStack(MESSAGES_FRAGMENT)
                 .commit();
 
     }
