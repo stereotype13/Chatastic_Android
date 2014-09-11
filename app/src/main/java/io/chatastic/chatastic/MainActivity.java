@@ -73,16 +73,6 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onBackPressed() {
-        mMessagesFragment = (MessagesFragment)getFragmentManager().findFragmentByTag(MESSAGES_FRAGMENT);
-        if(mMessagesFragment != null) {
-            //getFragmentManager().popBackStack(MESSAGES_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            mMessagesFragment = null;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -104,16 +94,8 @@ public class MainActivity extends Activity
                     mConversationsFragment = new ConversationsFragment();
                     mConversationsFragment.setConversations(conversations);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, mConversationsFragment, CONVERSATIONS_FRAGMENT)
+                            .add(R.id.container, mConversationsFragment, CONVERSATIONS_FRAGMENT)
                             .addToBackStack(CONVERSATIONS_FRAGMENT)
-                            .commit();
-                }
-
-
-                if(mMessagesFragment != null) {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.container, mMessagesFragment, MESSAGES_FRAGMENT)
-                            .addToBackStack(MESSAGES_FRAGMENT)
                             .commit();
                 }
 
@@ -122,7 +104,7 @@ public class MainActivity extends Activity
 
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), PLACEHOLDER_FRAGMENT)
+                        .add(R.id.container, PlaceholderFragment.newInstance(position + 1), PLACEHOLDER_FRAGMENT)
                         .addToBackStack(PLACEHOLDER_FRAGMENT)
                         .commit();
         }
@@ -139,7 +121,7 @@ public class MainActivity extends Activity
         mMessagesFragment.setConversation(conversation);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, mMessagesFragment, MESSAGES_FRAGMENT)
+                .add(R.id.container, mMessagesFragment, MESSAGES_FRAGMENT)
                 .addToBackStack(MESSAGES_FRAGMENT)
                 .commit();
 
