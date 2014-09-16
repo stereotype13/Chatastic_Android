@@ -55,7 +55,8 @@ public class ChatasticApp extends Application {
                 );
                 db.execSQL(
                         "CREATE TABLE Users (" +
-                                "id INTEGER PRIMARY KEY AUTOINCREMENT"+
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                                "mobile_number TEXT"+
                                 ")"
                 );
             }

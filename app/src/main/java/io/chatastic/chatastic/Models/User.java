@@ -17,6 +17,17 @@ public class User extends Model {
     @Column("id")
     private long id;
 
+    @Column("mobile_number")
+    private String mobileNumber;
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
     public long getId() {
         return id;
     }

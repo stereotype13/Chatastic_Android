@@ -13,6 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.PushService;
 
 import com.squareup.otto.Subscribe;
 
@@ -47,6 +52,13 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Parse.initialize(this, "ZBJ34jpmMjn9KqDZpMvEOcFeHyvV2MY2ymB7YNJK", "bn3tbe8GjGG6dZAJkigibDzprRihS1e2TtmZ9ch7");
+        PushService.setDefaultPushCallback(this, MainActivity.class);
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
