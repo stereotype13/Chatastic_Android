@@ -20,6 +20,17 @@ public class User extends Model {
     @Column("mobile_number")
     private String mobileNumber;
 
+    @Column("display_name")
+    private String displayName;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public String getMobileNumber() {
         return mobileNumber;
     }

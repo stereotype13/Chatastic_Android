@@ -4,6 +4,8 @@ import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.parse.Parse;
+
 import io.chatastic.chatastic.Models.Conversation;
 import io.chatastic.chatastic.Models.Message;
 import io.chatastic.chatastic.Models.Participant;
@@ -22,6 +24,7 @@ public class ChatasticApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Parse.initialize(this, "ZBJ34jpmMjn9KqDZpMvEOcFeHyvV2MY2ymB7YNJK", "bn3tbe8GjGG6dZAJkigibDzprRihS1e2TtmZ9ch7");
 
         Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
 
@@ -56,7 +59,8 @@ public class ChatasticApp extends Application {
                 db.execSQL(
                         "CREATE TABLE Users (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                                "mobile_number TEXT"+
+                                "mobile_number TEXT,"+
+                                "display_name TEXT"+
                                 ")"
                 );
             }
