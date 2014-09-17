@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:clickable="true"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvContactName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffffff"
+        android:text="Michelle Wu"
+        android:clickable="false"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="2dp" />
+
+    <TextView
+        android:id="@+id/tvContactNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1234567890"
+        android:textSize="14dp"
+        android:textColor="#ff979797"
+        android:paddingLeft="15dp"
+        android:paddingTop="0dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:enabled="false" />
+
+</LinearLayout>

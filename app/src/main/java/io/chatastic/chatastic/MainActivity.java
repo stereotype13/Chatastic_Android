@@ -121,7 +121,7 @@ public class MainActivity extends Activity
         testObject.saveInBackground();
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("device_id", "1234567890");
+        installation.put("device_id", "number");
         installation.saveInBackground();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -238,7 +238,7 @@ public class MainActivity extends Activity
         return super.onCreateOptionsMenu(menu);
     }
 
-    public ArrayList<User> getContacts() {
+    public ModelList<User> getContacts() {
 
         Uri PHONE_CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String CONTACT_ID =  ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
@@ -247,7 +247,7 @@ public class MainActivity extends Activity
         String TYPE = ContactsContract.CommonDataKinds.Phone.TYPE;
         int TYPE_MOBILE = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
 
-        ArrayList<User> contacts = new ArrayList<User>();
+        ModelList<User> contacts = new ModelList<User>();
         Cursor contactCursor = getContentResolver().query(PHONE_CONTENT_URI, new String[]{CONTACT_ID, NAME, NUMBER}, TYPE + " = ?", new String[]{String.valueOf(TYPE_MOBILE)}, null, null);
         contactCursor.moveToFirst();
         do {
@@ -274,7 +274,7 @@ public class MainActivity extends Activity
         if (id == R.id.action_settings) {
 
             mContactsFragment = new ContactsFragment();
-            ArrayList<User> contacts = getContacts();
+            ModelList<User> contacts = getContacts();
             mContactsFragment.setContacts(contacts);
             getFragmentManager().beginTransaction().add(R.id.container, mContactsFragment, CONTACTS_FRAGMENT).addToBackStack(CONTACTS_FRAGMENT).commit();
             return true;
