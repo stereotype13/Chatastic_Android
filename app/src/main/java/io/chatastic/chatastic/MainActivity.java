@@ -54,6 +54,7 @@ public class MainActivity extends Activity
     private ConversationsFragment mConversationsFragment;
     private MessagesFragment mMessagesFragment;
     private ContactsFragment mContactsFragment;
+    private String mPhoneNumber;
 
     private static final String CONVERSATIONS_FRAGMENT = "CONVERSATIONS_FRAGMENT";
     private static final String MESSAGES_FRAGMENT = "MESSAGES_FRAGMENT";
@@ -70,58 +71,16 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Test getting the phone number
-        TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-        final String number = tm.getLine1Number();
-
-        Toast.makeText(this, "+" + number, 1000).show();
-
-        //////
+        mPhoneNumber = ChatasticApp.DEVICE.getMobileNumber();
 
         PushService.setDefaultPushCallback(this, MainActivity.class);
-
-        ParseUser user = new ParseUser();
-        user = ParseUser.getCurrentUser();
-        if(user == null) {
-            ParseUser.logInInBackground("+" + number, "", new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user != null) {
-                        // Hooray! The user is logged in.
-                        Toast.makeText(getParent(), "We loggin in!", 1000).show();
-                    } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                        user.setUsername("+" + number);
-                        user.setPassword("");
-
-
-// other fields can be set just like with ParseObject
-                        user.put("phone", "650-555-0000");
-
-                        user.signUpInBackground(new SignUpCallback() {
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    // Hooray! Let them use the app now.
-
-                                } else {
-                                    // Sign up didn't succeed. Look at the ParseException
-                                    // to figure out what went wrong
-                                    Log.e("TEST", "exception", e);
-                                }
-                            }
-                        });
-                        Log.e("TEST", "exception", e);
-                    }
-                }
-            });
-        }
-
 
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("device_id", "number");
+        installation.put("device_id", mPhoneNumber);
         installation.saveInBackground();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -282,7 +241,7 @@ public class MainActivity extends Activity
 
         if(id == R.id.send_push) {
             ParseQuery query = ParseInstallation.getQuery();
-            query.whereEqualTo("device_id", "1234567890");
+            query.whereEqualTo("device_id", mPhoneNumber);
             ParsePush push = new ParsePush();
             push.setQuery(query);
             push.setMessage("This is the push message! Woohoo!");

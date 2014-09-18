@@ -9,6 +9,8 @@ import com.parse.Parse;
 import io.chatastic.chatastic.Models.Conversation;
 import io.chatastic.chatastic.Models.Message;
 import io.chatastic.chatastic.Models.Participant;
+import io.chatastic.chatastic.Models.PhoneInfo;
+import io.chatastic.chatastic.Models.ThisDevice;
 import io.chatastic.chatastic.Models.User;
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Migration;
@@ -21,11 +23,16 @@ import se.emilsjolander.sprinkles.Sprinkles;
  */
 public class ChatasticApp extends Application {
 
+    public static PhoneInfo DEVICE;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //Initialize Parse
         Parse.initialize(this, "ZBJ34jpmMjn9KqDZpMvEOcFeHyvV2MY2ymB7YNJK", "bn3tbe8GjGG6dZAJkigibDzprRihS1e2TtmZ9ch7");
 
+        //Initialize Sprinkles
         Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
 
         sprinkles.addMigration(new Migration() {
@@ -36,6 +43,14 @@ public class ChatasticApp extends Application {
 
             @Override
             protected void doMigration(SQLiteDatabase db) {
+                db.execSQL(
+                        "CREATE TABLE This_device (" +
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                                "mobile_number TEXT," +
+                                "user_name TEXT" +
+                                ")"
+                );
+
                 db.execSQL(
                         "CREATE TABLE Conversations (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
@@ -70,6 +85,8 @@ public class ChatasticApp extends Application {
 
             }
         });
+
+        DEVICE = PhoneInfo.getPhoneInfo(getApplicationContext());
 
         //For testing purposes
         //Add some seed data
