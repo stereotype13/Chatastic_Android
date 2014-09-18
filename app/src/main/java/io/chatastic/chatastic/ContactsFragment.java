@@ -20,6 +20,7 @@ import se.emilsjolander.sprinkles.ModelList;
  */
 public class ContactsFragment extends Fragment {
 
+    private String CONTACTS_BUNDLE_KEY = "CONTACTS_BUNDLE_KEY";
     private ModelList<User> mContacts;
 
     public ContactsFragment() {
@@ -29,6 +30,11 @@ public class ContactsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if(savedInstanceState != null) {
+            mContacts = (ModelList<User>)savedInstanceState.getSerializable(CONTACTS_BUNDLE_KEY);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         ListView contactsListView = (ListView)rootView.findViewById(R.id.lvContacts);
 
@@ -40,6 +46,12 @@ public class ContactsFragment extends Fragment {
 
         return rootView;
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(CONTACTS_BUNDLE_KEY, mContacts);
+        super.onSaveInstanceState(outState);
     }
 
     public void setContacts(ModelList<User> contacts) {
